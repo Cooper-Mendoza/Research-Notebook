@@ -1,0 +1,107 @@
+---
+interface Props {
+  title: string;
+  date: Date;
+  summary: string;
+  readingTime: string;
+  href: string;
+  type: 'research' | 'book-memo';
+  author?: string;
+  tags?: string[];
+}
+
+const { title, date, summary, readingTime, href, type, author, tags } = Astro.props;
+
+const typeLabel = type === 'research' ? 'Research' : 'Book Memo';
+const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<article class="post-card">
+  <div class="post-card__meta">
+    <span class="eyebrow">{typeLabel}</span>
+    <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
+    <span class="eyebrow eyebrow--subtle">{formattedDate}</span>
+    <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
+    <span class="eyebrow eyebrow--subtle">{readingTime}</span>
+  </div>
+  <h2 class="post-card__title">
+    <a href={href}>{title}</a>
+  </h2>
+  {author && <p class="post-card__author">{author}</p>}
+  <p class="post-card__summary">{summary}</p>
+  {tags && tags.length > 0 && (
+    <ul class="post-card__tags" aria-label="Tags">
+      {tags.map(tag => <li class="tag">{tag}</li>)}
+    </ul>
+  )}
+</article>
+
+<style>
+  .post-card {
+    padding: var(--space-6) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .post-card:last-child { border-bottom: none; }
+
+  .post-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .separator { opacity: 0.4; }
+
+  .post-card__title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: var(--size-xl);
+    line-height: var(--leading-tight);
+    margin-bottom: var(--space-2);
+    letter-spacing: -0.01em;
+  }
+
+  .post-card__title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .post-card__title a:hover { color: var(--color-accent); }
+
+  .post-card__author {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    color: var(--color-subtle);
+    letter-spacing: 0.06em;
+    margin-bottom: var(--space-3);
+  }
+
+  .post-card__summary {
+    font-family: var(--font-prose);
+    font-size: var(--size-base);
+    line-height: var(--leading-normal);
+    color: var(--color-subtle);
+    max-width: 62ch;
+    margin-top: var(--space-3);
+  }
+
+  .post-card__tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-subtle);
+    background: var(--color-surface);
+    padding: 2px var(--space-2);
+    border-radius: 2px;
+  }
+</style>

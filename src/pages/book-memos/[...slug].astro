@@ -1,0 +1,26 @@
+---
+import ProsePost from '../../layouts/ProsePost.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('book-memos');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<ProsePost
+  title={post.data.title}
+  date={post.data.date}
+  summary={post.data.summary}
+  readingTime={post.data.readingTime}
+  author={post.data.author}
+  tags={post.data.tags}
+>
+  <Content />
+</ProsePost>

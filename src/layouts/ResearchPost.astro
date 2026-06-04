@@ -1,0 +1,102 @@
+---
+import Page from './Page.astro';
+import StatRow from '../components/StatRow.astro';
+
+interface Stat {
+  label: string;
+  value: string;
+  note?: string;
+}
+
+interface Props {
+  title: string;
+  date: Date;
+  summary: string;
+  readingTime: string;
+  stats?: Stat[];
+  tags?: string[];
+}
+
+const { title, date, summary, readingTime, stats, tags } = Astro.props;
+const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Page title={title} description={summary}>
+  <div class="container container--wide">
+    <header class="post-header">
+      <div class="post-header__meta">
+        <a href="/research" class="eyebrow back-link">← Research</a>
+      </div>
+      <h1 class="post-title">{title}</h1>
+      <div class="post-byline">
+        <span class="eyebrow eyebrow--subtle">{formattedDate}</span>
+        <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
+        <span class="eyebrow eyebrow--subtle">{readingTime}</span>
+        {tags && tags.map(tag => (
+          <>
+            <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
+            <span class="eyebrow eyebrow--subtle">{tag}</span>
+          </>
+        ))}
+      </div>
+      <p class="post-summary">{summary}</p>
+    </header>
+
+    {stats && stats.length > 0 && <StatRow stats={stats} />}
+
+    <div class="post-divider"></div>
+
+    <div class="prose prose--research">
+      <slot />
+    </div>
+  </div>
+</Page>
+
+<style>
+  .post-header {
+    padding-bottom: var(--space-6);
+  }
+
+  .post-header__meta {
+    margin-bottom: var(--space-6);
+  }
+
+  .back-link {
+    text-decoration: none;
+    font-size: var(--size-xs);
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  .post-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: var(--size-3xl);
+    line-height: var(--leading-tight);
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+    margin-bottom: var(--space-3);
+  }
+
+  .post-byline {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+
+  .separator { opacity: 0.4; }
+
+  .post-summary {
+    font-family: var(--font-sans);
+    font-size: var(--size-md);
+    line-height: var(--leading-normal);
+    color: var(--color-subtle);
+    max-width: 62ch;
+  }
+
+  .post-divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: var(--space-8) 0;
+  }
+</style>

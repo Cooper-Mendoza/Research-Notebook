@@ -1,0 +1,60 @@
+---
+import Page from '../layouts/Page.astro';
+---
+
+<Page title="About" description="About this research notebook.">
+  <div class="container">
+    <header class="about-header">
+      <span class="eyebrow">About</span>
+      <h1 class="about-title">The notebook</h1>
+    </header>
+
+    <div class="prose about-body">
+      <p>
+        This is a public research notebook. I use it to think through companies,
+        industries, and books — and to publish that thinking in a form I'd want
+        to read myself.
+      </p>
+
+      <p>
+        The research section is where I work through business models: unit
+        economics, competitive dynamics, capital allocation. The book memos are
+        reactions, not summaries — what stuck, what I'd argue with, and how my
+        thinking shifted.
+      </p>
+
+      <h2>Why public?</h2>
+      <p>
+        Writing forces precision. Publishing forces honesty. And occasionally
+        someone reads it, disagrees, and makes the thinking better. That's the
+        deal.
+      </p>
+
+      <h2>Based in Austin</h2>
+      <p>
+        Reach me at <a href="mailto:hello@example.com">hello@example.com</a>.
+        I'm always interested in talking about companies, books, or anything in
+        the overlap.
+      </p>
+    </div>
+  </div>
+</Page>
+
+<style>
+  .about-header {
+    padding: var(--space-12) 0 var(--space-8);
+  }
+
+  .about-header .eyebrow { display: block; margin-bottom: var(--space-4); }
+
+  .about-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: var(--size-2xl);
+    letter-spacing: -0.015em;
+  }
+
+  .about-body {
+    padding-bottom: var(--space-16);
+  }
+</style>

@@ -1,0 +1,29 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span class="eyebrow eyebrow--subtle">© {year} — Austin, Texas</span>
+    <span class="eyebrow eyebrow--subtle">Built with Astro</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: auto;
+    padding: var(--space-8) 0 var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 480px) {
+    .footer-inner { flex-direction: column; align-items: flex-start; }
+  }
+</style>

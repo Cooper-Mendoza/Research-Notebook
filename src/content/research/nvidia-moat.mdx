@@ -1,0 +1,61 @@
+---
+title: "NVIDIA's Moat: Why the Software Layer Matters More Than the Chip"
+date: 2024-11-12
+summary: "CUDA isn't a product — it's a decade-long switching cost. A look at how NVIDIA built a software moat that makes the hardware almost beside the point."
+readingTime: "12 min read"
+tags: ["semiconductors", "compounders", "business-models"]
+stats:
+  - label: "Data Center Revenue"
+    value: "$47.5B"
+    note: "FY2024 — up 217% YoY"
+  - label: "Gross Margin"
+    value: "76%"
+    note: "Data center segment"
+  - label: "CUDA Developers"
+    value: "4M+"
+    note: "Ecosystem lock-in"
+---
+
+## The question worth asking
+
+Every analyst report on NVIDIA starts with the chip. That's the wrong place to start.
+
+The chip is the product you buy. The software stack is the reason you can't leave.
+
+CUDA — NVIDIA's parallel computing platform — launched in 2006, seven years before anyone was training serious neural nets on GPUs. At the time it looked like a strange bet: spend years teaching developers to write code for graphics hardware just to do... general computation? The economics seemed questionable. The payoff was not.
+
+## How the moat was built
+
+CUDA didn't win because it was technically superior. It won because NVIDIA showed up first and kept showing up. They hired developer relations teams when their competitors were hiring more chip designers. They funded academic research. They shipped tools that made it marginally easier to do things that were previously nearly impossible.
+
+Switching costs in developer tools compound differently than most moats. A company that has written two years of CUDA-optimized training code has a library of institutional knowledge — debugging patterns, optimization tricks, vendor-specific quirks — that has zero value on a competing platform. That's not a lock-in that appears on a balance sheet, but it's real.
+
+| Year | CUDA Milestone | Competitor Response |
+|------|---------------|---------------------|
+| 2006 | CUDA 1.0 ships | — |
+| 2012 | AlexNet runs on two GTX 580s | AMD OpenCL lags |
+| 2018 | Tensor Cores in Volta | Google TPUv2 (proprietary) |
+| 2022 | H100 / Hopper | AMD ROCm 5.x, Intel Gaudi |
+| 2024 | Blackwell B200 | AMD MI300X closes gap on HBM |
+
+The table tells the story: every time a competitor closes the hardware gap, the software gap widens. ROCm in 2024 is meaningfully better than ROCm in 2020. It's still years behind CUDA in ecosystem depth.
+
+## What the bears get right
+
+The short case is not crazy. It's just earlier than it is today.
+
+AMD's MI300X has better memory bandwidth than the H100. Some workloads — particularly inference, where memory capacity matters more than compute — are starting to flow to AMD. Google and Amazon are building their own silicon. Microsoft is rumored to be working on an inference chip.
+
+The risk is not that CUDA falls apart. The risk is that the workload mix shifts. Training a foundation model is a high-CUDA-leverage activity. Running inference on a deployed model is not. If inference becomes the dominant revenue opportunity, NVIDIA's moat narrows.
+
+## Why I'd still own it
+
+The question isn't "is NVIDIA expensive?" — it is, on any normalized metric. The question is whether the moat is durable enough to justify the multiple.
+
+The CUDA ecosystem is a collective action problem for competitors. Every dollar of developer tooling AMD or Intel builds has to be measured against the existing CUDA base. And the existing CUDA base keeps growing, because NVIDIA keeps winning new workloads, which attracts more developers, which deepens the tools, which makes it harder to leave.
+
+That's a flywheel. It's not invincible, but it's real.
+
+---
+
+*Positions: None at time of writing. This is a research note, not investment advice.*

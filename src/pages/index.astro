@@ -1,0 +1,142 @@
+---
+import Page from '../layouts/Page.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const researchPosts = await getCollection('research');
+const bookMemos = await getCollection('book-memos');
+
+const allPosts = [
+  ...researchPosts.map(p => ({ ...p, postType: 'research' as const, href: `/research/${p.slug}` })),
+  ...bookMemos.map(p => ({ ...p, postType: 'book-memo' as const, href: `/book-memos/${p.slug}` })),
+].sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 5);
+
+const topics = [
+  { label: 'Consumer', href: '/research?tag=consumer' },
+  { label: 'Compounders', href: '/research?tag=compounders' },
+  { label: 'Mental Models', href: '/book-memos?tag=mental-models' },
+  { label: 'Strategy', href: '/book-memos?tag=strategy' },
+  { label: 'Business Models', href: '/research?tag=business-models' },
+  { label: 'Investing', href: '/book-memos?tag=investing' },
+];
+---
+
+<Page title="Home">
+  <div class="container">
+
+    <!-- Intro -->
+    <section class="intro">
+      <span class="eyebrow">Research Notebook</span>
+      <h1 class="intro__headline">
+        Thinking in public,<br />slowly.
+      </h1>
+      <p class="intro__body">
+        A public notebook — company research, book notes, and how my
+        thinking changes over time. Based in Austin, Texas.
+      </p>
+    </section>
+
+    <!-- Recent work -->
+    <section class="section" aria-labelledby="recent-heading">
+      <h2 class="section__heading" id="recent-heading">
+        <span class="eyebrow">Recent work</span>
+      </h2>
+      <div class="post-list">
+        {allPosts.map(post => (
+          <PostCard
+            title={post.data.title}
+            date={post.data.date}
+            summary={post.data.summary}
+            readingTime={post.data.readingTime}
+            href={post.href}
+            type={post.postType}
+            author={'author' in post.data ? post.data.author : undefined}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+    </section>
+
+    <!-- Explore by topic -->
+    <section class="section" aria-labelledby="topics-heading">
+      <h2 class="section__heading" id="topics-heading">
+        <span class="eyebrow">Explore by topic</span>
+      </h2>
+      <ul class="topic-grid">
+        {topics.map(({ label, href }) => (
+          <li>
+            <a href={href} class="topic-chip">{label}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+  </div>
+</Page>
+
+<style>
+  .intro {
+    padding: var(--space-16) 0 var(--space-12);
+    max-width: 560px;
+  }
+
+  .intro .eyebrow {
+    display: block;
+    margin-bottom: var(--space-4);
+  }
+
+  .intro__headline {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(var(--size-2xl), 5vw, var(--size-3xl));
+    line-height: var(--leading-tight);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-6);
+  }
+
+  .intro__body {
+    font-family: var(--font-prose);
+    font-size: var(--size-md);
+    line-height: var(--leading-loose);
+    color: var(--color-subtle);
+    max-width: 48ch;
+  }
+
+  .section {
+    margin-top: var(--space-16);
+  }
+
+  .section__heading {
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .post-list { }
+
+  .topic-grid {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .topic-chip {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-text);
+    text-decoration: none;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: var(--space-2) var(--space-4);
+    border-radius: 2px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .topic-chip:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+</style>

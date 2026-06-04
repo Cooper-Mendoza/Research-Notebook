@@ -1,0 +1,26 @@
+---
+import ResearchPost from '../../layouts/ResearchPost.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('research');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<ResearchPost
+  title={post.data.title}
+  date={post.data.date}
+  summary={post.data.summary}
+  readingTime={post.data.readingTime}
+  stats={post.data.stats}
+  tags={post.data.tags}
+>
+  <Content />
+</ResearchPost>
