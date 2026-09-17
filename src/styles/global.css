@@ -1,20 +1,24 @@
-/* ─── Font imports ──────────────────────────────────────────── */
+/* ─── Font imports (self-hosted via @fontsource; only the faces actually used) ── */
 @import "@fontsource/fraunces/latin-500.css";
-@import "@fontsource/fraunces/latin-500-italic.css";
 @import "@fontsource/ibm-plex-mono/latin-400.css";
 @import "@fontsource/newsreader/latin-400.css";
 @import "@fontsource/newsreader/latin-400-italic.css";
+@import "@fontsource/newsreader/latin-600.css";
 @import "@fontsource/inter/latin-400.css";
 @import "@fontsource/inter/latin-500.css";
+@import "@fontsource/inter/latin-600.css";
 
 /* ─── Design tokens ─────────────────────────────────────────── */
 :root {
-  --color-bg:        #F4EFE6;
-  --color-text:      #2B2620;
-  --color-accent:    #BF5700;
-  --color-subtle:    #8C7F75;
-  --color-border:    #DDD6CB;
-  --color-surface:   #EDE8DF;
+  --color-bg:          #F4EFE6;
+  --color-text:        #2B2620;
+  /* Brand orange — used for marks, rules and hover states. */
+  --color-accent:      #BF5700;
+  /* Same hue, deepened just enough to pass WCAG AA when used as small text on the paper. */
+  --color-accent-text: #A84C00;
+  --color-subtle:      #6F635A;
+  --color-border:      #DDD6CB;
+  --color-surface:     #EDE8DF;
 
   --font-serif:      'Fraunces', Georgia, serif;
   --font-mono:       'IBM Plex Mono', 'Courier New', monospace;
@@ -29,6 +33,9 @@
   --size-xl:   1.75rem;    /* 28px */
   --size-2xl:  2.25rem;    /* 36px */
   --size-3xl:  3rem;       /* 48px */
+
+  /* Fluid headline size for post titles and the homepage: ~31px on a phone, 48px from ~800px. */
+  --size-headline: clamp(2rem, 4vw + 1rem, var(--size-3xl));
 
   --leading-tight:  1.2;
   --leading-normal: 1.55;
@@ -55,7 +62,7 @@ html {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-prose);
-  font-size: 16px;
+  font-size: 100%;               /* respect the reader's browser default */
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -66,10 +73,10 @@ body {
   flex-direction: column;
 }
 
-img, video { max-width: 100%; display: block; }
+img, video { max-width: 100%; height: auto; display: block; }
 
 a {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   text-decoration-line: underline;
   text-decoration-color: transparent;
   text-underline-offset: 3px;
@@ -77,19 +84,64 @@ a {
 }
 a:hover { text-decoration-color: var(--color-accent); }
 
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ─── Accessibility helpers ─────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -100px;
+  z-index: 10;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-text);
+  color: var(--color-bg);
+  font-family: var(--font-mono);
+  font-size: var(--size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  border-radius: 2px;
+}
+.skip-link:focus { top: var(--space-4); }
+
 /* ─── Utility classes ───────────────────────────────────────── */
 .eyebrow {
   font-family: var(--font-mono);
   font-size: var(--size-xs);
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   font-weight: 400;
 }
 
-.eyebrow--subtle {
-  color: var(--color-subtle);
+.eyebrow--subtle { color: var(--color-subtle); }
+
+/* Date · reading time · tags rows: wrap between items, never inside one. */
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
 }
+.meta-row > * { white-space: nowrap; }
+.meta-row .separator { opacity: 0.4; }
+
+/* Inline SVG arrows (the ← → glyphs aren't in the latin font subsets). */
+.arrow { width: 0.9em; height: 0.9em; vertical-align: -0.1em; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 
 .container {
   width: 100%;
@@ -98,8 +150,15 @@ a:hover { text-decoration-color: var(--color-accent); }
   padding-inline: var(--space-6);
 }
 
-.container--wide {
-  max-width: 1000px;
+.container--wide { max-width: 1000px; }
+
+.empty-state {
+  font-family: var(--font-prose);
+  font-size: var(--size-md);
+  line-height: var(--leading-normal);
+  color: var(--color-subtle);
+  max-width: 52ch;
+  padding: var(--space-6) 0;
 }
 
 /* ─── Prose (book memos / homepage body) ────────────────────── */
@@ -165,15 +224,20 @@ a:hover { text-decoration-color: var(--color-accent); }
   font-weight: 500;
 }
 
-/* tables */
-.prose--research table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--size-sm);
+/* Tables: every Markdown table is wrapped in .table-wrap by astro.config.mjs so wide ones scroll on phones. */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   margin: var(--space-8) 0;
 }
 
-.prose--research th {
+.prose table, .prose--research table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--size-sm);
+}
+
+.prose--research th, .prose th {
   font-family: var(--font-mono);
   font-size: var(--size-xs);
   text-transform: uppercase;
@@ -182,17 +246,18 @@ a:hover { text-decoration-color: var(--color-accent); }
   padding: var(--space-2) var(--space-3);
   border-bottom: 1px solid var(--color-text);
   color: var(--color-subtle);
+  white-space: nowrap;
 }
 
-.prose--research td {
+.prose--research td, .prose td {
   padding: var(--space-2) var(--space-3);
   border-bottom: 1px solid var(--color-border);
   vertical-align: top;
 }
 
-.prose--research tr:last-child td { border-bottom: none; }
+.prose--research tr:last-child td, .prose tr:last-child td { border-bottom: none; }
 
-/* images from R/ggplot */
+/* Images (charts exported from R/ggplot) */
 .prose--research img,
 .prose img {
   border: 1px solid var(--color-border);
@@ -208,4 +273,29 @@ a:hover { text-decoration-color: var(--color-accent); }
   text-align: center;
   margin-top: var(--space-2);
   letter-spacing: 0.06em;
+}
+
+/* ─── Section listing headers (Research, Book Memos, tag pages) ── */
+.listing-header {
+  padding: var(--space-12) 0 var(--space-8);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-2);
+}
+
+.listing-header .eyebrow { display: block; margin-bottom: var(--space-4); }
+
+.listing-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: var(--size-2xl);
+  letter-spacing: -0.015em;
+  margin-bottom: var(--space-3);
+}
+
+.listing-desc {
+  font-family: var(--font-prose);
+  font-size: var(--size-base);
+  color: var(--color-subtle);
+  max-width: 52ch;
+  line-height: var(--leading-normal);
 }

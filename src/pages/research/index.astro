@@ -1,61 +1,31 @@
 ---
 import Page from '../../layouts/Page.astro';
 import PostCard from '../../components/PostCard.astro';
-import { getCollection } from 'astro:content';
+import { getResearch, toSummary } from '../../lib/posts';
 
-const posts = (await getCollection('research'))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = (await getResearch()).map((p) => toSummary(p, 'research', `/research/${p.slug}/`));
 ---
 
-<Page title="Research" description="Company and industry research notes.">
+<Page
+  title="Research"
+  description="Deep dives into individual companies: how the business makes money, where the moat is, what the numbers say, and what the market may be missing."
+>
   <div class="container">
     <header class="listing-header">
       <span class="eyebrow">Research</span>
       <h1 class="listing-title">Company &amp; industry notes</h1>
       <p class="listing-desc">
-        Deep dives into companies, industries, and business models.
-        Data-heavy. Inter body text for readability.
+        Deep dives into individual companies — how the business makes money,
+        where the moat is, what the numbers say, and what the market may be missing.
       </p>
     </header>
 
-    <div class="post-list">
-      {posts.map(post => (
-        <PostCard
-          title={post.data.title}
-          date={post.data.date}
-          summary={post.data.summary}
-          readingTime={post.data.readingTime}
-          href={`/research/${post.slug}`}
-          type="research"
-          tags={post.data.tags}
-        />
-      ))}
-    </div>
+    {posts.length > 0 ? (
+      <div class="post-list">
+        {posts.map((post) => <PostCard {...post} />)}
+      </div>
+    ) : (
+      <p class="empty-state">The first research notes are in progress. Check back soon.</p>
+    )}
   </div>
 </Page>
-
-<style>
-  .listing-header {
-    padding: var(--space-12) 0 var(--space-8);
-    border-bottom: 1px solid var(--color-border);
-    margin-bottom: var(--space-2);
-  }
-
-  .listing-header .eyebrow { display: block; margin-bottom: var(--space-4); }
-
-  .listing-title {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: var(--size-2xl);
-    letter-spacing: -0.015em;
-    margin-bottom: var(--space-3);
-  }
-
-  .listing-desc {
-    font-family: var(--font-prose);
-    font-size: var(--size-base);
-    color: var(--color-subtle);
-    max-width: 52ch;
-    line-height: var(--leading-normal);
-  }
-</style>

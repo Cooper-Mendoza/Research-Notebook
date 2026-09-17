@@ -4,6 +4,8 @@ date: 2024-07-08
 author: "Clayton M. Christensen, Taddy Hall, Karen Dillon, David S. Duncan"
 summary: "The Jobs-to-be-Done framework is more powerful than most product teams realize, but only if you resist the temptation to operationalize it into a research checklist."
 readingTime: "8 min read"
+# Sample memo written to demonstrate the prose layout — not Cooper's own work. Keep draft: true.
+draft: true
 tags: ["strategy", "product", "mental-models"]
 ---
 

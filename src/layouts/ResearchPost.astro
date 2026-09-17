@@ -1,6 +1,7 @@
 ---
 import Page from './Page.astro';
 import StatRow from '../components/StatRow.astro';
+import { formatDate, isoDate, tagHref, tagLabel } from '../lib/posts';
 
 interface Stat {
   label: string;
@@ -15,76 +16,82 @@ interface Props {
   readingTime: string;
   stats?: Stat[];
   tags?: string[];
+  draft?: boolean;
 }
 
-const { title, date, summary, readingTime, stats, tags } = Astro.props;
-const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const { title, date, summary, readingTime, stats = [], tags = [], draft = false } = Astro.props;
 ---
 
-<Page title={title} description={summary}>
-  <div class="container container--wide">
+<Page title={title} description={summary} type="article" publishedTime={date}>
+  <article class="container container--wide">
     <header class="post-header">
-      <div class="post-header__meta">
-        <a href="/research" class="eyebrow back-link">← Research</a>
-      </div>
+      <p class="post-header__meta">
+        <a href="/research/" class="eyebrow back-link">
+          <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4"/></svg>
+          Research
+        </a>
+      </p>
       <h1 class="post-title">{title}</h1>
-      <div class="post-byline">
-        <span class="eyebrow eyebrow--subtle">{formattedDate}</span>
+      <div class="post-byline meta-row">
+        <time class="eyebrow eyebrow--subtle" datetime={isoDate(date)}>{formatDate(date, 'long')}</time>
         <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
         <span class="eyebrow eyebrow--subtle">{readingTime}</span>
-        {tags && tags.map(tag => (
+        {tags.map((tag) => (
           <>
             <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
-            <span class="eyebrow eyebrow--subtle">{tag}</span>
+            <a class="eyebrow eyebrow--subtle tag-link" href={tagHref(tag)}>{tagLabel(tag)}</a>
           </>
         ))}
+        {draft && <span class="eyebrow draft-badge">Draft · dev only</span>}
       </div>
       <p class="post-summary">{summary}</p>
     </header>
 
-    {stats && stats.length > 0 && <StatRow stats={stats} />}
+    {stats.length > 0 && <StatRow stats={stats} />}
 
-    <div class="post-divider"></div>
+    <div class="post-divider" role="presentation"></div>
 
     <div class="prose prose--research">
       <slot />
     </div>
-  </div>
+  </article>
 </Page>
 
 <style>
-  .post-header {
-    padding-bottom: var(--space-6);
-  }
+  .post-header { padding-bottom: var(--space-6); }
 
-  .post-header__meta {
-    margin-bottom: var(--space-6);
-  }
+  .post-header__meta { margin-bottom: var(--space-6); }
 
   .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) 0;
     text-decoration: none;
-    font-size: var(--size-xs);
   }
   .back-link:hover { text-decoration: underline; }
 
   .post-title {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: var(--size-3xl);
+    font-size: var(--size-headline);
     line-height: var(--leading-tight);
     letter-spacing: -0.02em;
     max-width: 22ch;
     margin-bottom: var(--space-3);
   }
 
-  .post-byline {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    margin-bottom: var(--space-6);
-  }
+  .post-byline { margin-bottom: var(--space-6); }
 
-  .separator { opacity: 0.4; }
+  .tag-link { text-decoration: none; }
+  .tag-link:hover { color: var(--color-accent-text); }
+
+  .draft-badge {
+    color: var(--color-bg);
+    background: var(--color-accent);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
 
   .post-summary {
     font-family: var(--font-sans);

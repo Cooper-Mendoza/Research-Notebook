@@ -4,3 +4,6 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Claude desktop launch config (local only)
+.claude/

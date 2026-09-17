@@ -1,0 +1,37 @@
+---
+import Page from '../../layouts/Page.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getAllPosts, collectTags, tagLabel, type PostSummary } from '../../lib/posts';
+
+// One page per tag that appears on a published post — nothing links to an empty topic.
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  return collectTags(posts).map(({ tag }) => ({
+    params: { tag },
+    props: { posts: posts.filter((p) => p.tags.includes(tag)) },
+  }));
+}
+
+const tag = Astro.params.tag ?? '';
+const { posts } = Astro.props as { posts: PostSummary[] };
+const label = tagLabel(tag);
+const count = `${posts.length} ${posts.length === 1 ? 'note' : 'notes'}`;
+---
+
+<Page title={`Topic: ${label}`} description={`${count} tagged “${label}” — company research and book memos by Cooper Mendoza.`}>
+  <div class="container">
+    <header class="listing-header">
+      <span class="eyebrow">Topic</span>
+      <h1 class="listing-title listing-title--tag">{label}</h1>
+      <p class="listing-desc">{count} tagged “{label}”.</p>
+    </header>
+
+    <div class="post-list">
+      {posts.map((post) => <PostCard {...post} />)}
+    </div>
+  </div>
+</Page>
+
+<style>
+  .listing-title--tag { text-transform: capitalize; }
+</style>

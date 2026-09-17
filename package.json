@@ -5,14 +5,19 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "assets": "node scripts/brand-assets.mjs"
   },
   "dependencies": {
-    "astro": "^4.15.0",
     "@astrojs/mdx": "^3.1.0",
+    "@astrojs/sitemap": "^3.2.1",
     "@fontsource/fraunces": "^5.1.0",
     "@fontsource/ibm-plex-mono": "^5.1.0",
+    "@fontsource/inter": "^5.1.0",
     "@fontsource/newsreader": "^5.1.0",
-    "@fontsource/inter": "^5.1.0"
+    "astro": "^4.15.0"
+  },
+  "devDependencies": {
+    "opentype.js": "^1.3.4"
   }
 }

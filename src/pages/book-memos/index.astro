@@ -1,13 +1,15 @@
 ---
 import Page from '../../layouts/Page.astro';
 import PostCard from '../../components/PostCard.astro';
-import { getCollection } from 'astro:content';
+import { getBookMemos, toSummary } from '../../lib/posts';
 
-const posts = (await getCollection('book-memos'))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = (await getBookMemos()).map((p) => toSummary(p, 'book-memo', `/book-memos/${p.slug}/`));
 ---
 
-<Page title="Book Memos" description="Notes and reactions to books worth reading.">
+<Page
+  title="Book Memos"
+  description="Reading notes — not summaries but reactions: what stuck, what I'd push back on, and how it changed how I think."
+>
   <div class="container">
     <header class="listing-header">
       <span class="eyebrow">Book Memos</span>
@@ -18,45 +20,12 @@ const posts = (await getCollection('book-memos'))
       </p>
     </header>
 
-    <div class="post-list">
-      {posts.map(post => (
-        <PostCard
-          title={post.data.title}
-          date={post.data.date}
-          summary={post.data.summary}
-          readingTime={post.data.readingTime}
-          href={`/book-memos/${post.slug}`}
-          type="book-memo"
-          author={post.data.author}
-          tags={post.data.tags}
-        />
-      ))}
-    </div>
+    {posts.length > 0 ? (
+      <div class="post-list">
+        {posts.map((post) => <PostCard {...post} />)}
+      </div>
+    ) : (
+      <p class="empty-state">The first book memos are in progress. Check back soon.</p>
+    )}
   </div>
 </Page>
-
-<style>
-  .listing-header {
-    padding: var(--space-12) 0 var(--space-8);
-    border-bottom: 1px solid var(--color-border);
-    margin-bottom: var(--space-2);
-  }
-
-  .listing-header .eyebrow { display: block; margin-bottom: var(--space-4); }
-
-  .listing-title {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: var(--size-2xl);
-    letter-spacing: -0.015em;
-    margin-bottom: var(--space-3);
-  }
-
-  .listing-desc {
-    font-family: var(--font-prose);
-    font-size: var(--size-base);
-    color: var(--color-subtle);
-    max-width: 52ch;
-    line-height: var(--leading-normal);
-  }
-</style>

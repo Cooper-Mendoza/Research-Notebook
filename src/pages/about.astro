@@ -2,7 +2,7 @@
 import Page from '../layouts/Page.astro';
 ---
 
-<Page title="About" description="Cooper Mendoza — Finance student at UT Austin, McCombs School of Business.">
+<Page title="About" description="Cooper Mendoza — Finance student at UT Austin's McCombs School of Business (Class of 2029) and officer of Texas Equity Management.">
   <div class="container">
     <header class="about-header">
       <span class="eyebrow">About</span>
@@ -44,7 +44,9 @@ import Page from '../layouts/Page.astro';
       </p>
       <p>
         <a href="https://www.linkedin.com/in/cooper-mendoza" target="_blank" rel="noopener noreferrer" class="linkedin-link">
-          linkedin.com/in/cooper-mendoza →
+          linkedin.com/in/cooper-mendoza
+          <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          <span class="sr-only">(opens in a new tab)</span>
         </a>
       </p>
     </div>
@@ -70,6 +72,9 @@ import Page from '../layouts/Page.astro';
   }
 
   .linkedin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
     font-family: var(--font-mono);
     font-size: var(--size-sm);
     letter-spacing: 0.04em;

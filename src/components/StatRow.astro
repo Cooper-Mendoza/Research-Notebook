@@ -12,15 +12,15 @@ interface Props {
 const { stats } = Astro.props;
 ---
 
-<div class="stat-row" role="list" aria-label="Key statistics">
+<dl class="stat-row">
   {stats.map(({ label, value, note }) => (
-    <div class="stat" role="listitem">
-      <span class="stat__label eyebrow eyebrow--subtle">{label}</span>
-      <span class="stat__value">{value}</span>
-      {note && <span class="stat__note">{note}</span>}
+    <div class="stat">
+      <dt class="stat__label eyebrow eyebrow--subtle">{label}</dt>
+      <dd class="stat__value">{value}</dd>
+      {note && <dd class="stat__note">{note}</dd>}
     </div>
   ))}
-</div>
+</dl>
 
 <style>
   .stat-row {
@@ -61,5 +61,10 @@ const { stats } = Astro.props;
     font-size: var(--size-xs);
     color: var(--color-subtle);
     letter-spacing: 0.06em;
+  }
+
+  /* Phones: stack instead of leaving a third stat orphaned beside an empty cell. */
+  @media (max-width: 520px) {
+    .stat-row { grid-template-columns: 1fr; }
   }
 </style>

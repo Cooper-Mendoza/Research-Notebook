@@ -1,0 +1,50 @@
+---
+import Page from '../layouts/Page.astro';
+---
+
+<Page title="Not found" description="That page doesn't exist." noindex>
+  <div class="container">
+    <header class="nf">
+      <span class="eyebrow">404</span>
+      <h1 class="nf__title">Nothing here.</h1>
+      <p class="nf__body">That page doesn't exist, or it moved. Try one of these instead.</p>
+      <ul class="nf__links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/book-memos/">Book Memos</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+    </header>
+  </div>
+</Page>
+
+<style>
+  .nf { padding: var(--space-12) 0 var(--space-16); }
+  .nf .eyebrow { display: block; margin-bottom: var(--space-4); }
+  .nf__title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: var(--size-2xl);
+    letter-spacing: -0.015em;
+    margin-bottom: var(--space-3);
+  }
+  .nf__body {
+    font-family: var(--font-prose);
+    font-size: var(--size-md);
+    color: var(--color-subtle);
+    max-width: 48ch;
+    margin-bottom: var(--space-6);
+  }
+  .nf__links {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-6);
+  }
+  .nf__links a {
+    font-family: var(--font-mono);
+    font-size: var(--size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+</style>

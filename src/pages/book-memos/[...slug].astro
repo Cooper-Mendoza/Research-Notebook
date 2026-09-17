@@ -1,13 +1,11 @@
 ---
 import ProsePost from '../../layouts/ProsePost.astro';
-import { getCollection } from 'astro:content';
+import { getBookMemos, readingTime } from '../../lib/posts';
 
+// Drafts are excluded here too, so a hidden memo is not reachable at its direct URL in production.
 export async function getStaticPaths() {
-  const posts = await getCollection('book-memos');
-  return posts.map(post => ({
-    params: { slug: post.slug },
-    props: { post },
-  }));
+  const posts = await getBookMemos();
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
 }
 
 const { post } = Astro.props;
@@ -18,9 +16,10 @@ const { Content } = await post.render();
   title={post.data.title}
   date={post.data.date}
   summary={post.data.summary}
-  readingTime={post.data.readingTime}
+  readingTime={readingTime(post.body, post.data.readingTime)}
   author={post.data.author}
   tags={post.data.tags}
+  draft={post.data.draft}
 >
   <Content />
 </ProsePost>
