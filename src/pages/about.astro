@@ -2,39 +2,50 @@
 import Page from '../layouts/Page.astro';
 ---
 
-<Page title="About" description="About this research notebook.">
+<Page title="About" description="Cooper Mendoza — Finance student at UT Austin, McCombs School of Business.">
   <div class="container">
     <header class="about-header">
       <span class="eyebrow">About</span>
-      <h1 class="about-title">The notebook</h1>
+      <h1 class="about-title">Cooper Mendoza</h1>
     </header>
 
     <div class="prose about-body">
       <p>
-        This is a public research notebook. I use it to think through companies,
-        industries, and books — and to publish that thinking in a form I'd want
-        to read myself.
+        I'm a Finance student at the University of Texas at Austin,
+        McCombs School of Business, Class of 2029. My focus is equity
+        valuation, stock pitching, and investment analysis — the work of
+        understanding what a business is actually worth and why.
       </p>
 
       <p>
-        The research section is where I work through business models: unit
-        economics, competitive dynamics, capital allocation. The book memos are
-        reactions, not summaries — what stuck, what I'd argue with, and how my
-        thinking shifted.
+        I'm an officer of <strong>Texas Equity Management (TEM)</strong>, a
+        student-run investment fund at McCombs. We present stock pitches and
+        portfolio updates to give our members real exposure to markets and the
+        discipline of making a case in front of people who will push back on it.
       </p>
 
-      <h2>Why public?</h2>
+      <h2>Why this notebook</h2>
       <p>
-        Writing forces precision. Publishing forces honesty. And occasionally
-        someone reads it, disagrees, and makes the thinking better. That's the
-        deal.
+        I started writing publicly because it forces a standard. A research note
+        you're going to show someone has to be more honest than one that lives
+        in a folder. The process of cleaning up thinking enough to publish it
+        is most of the value.
+      </p>
+      <p>
+        The research section is where I work through individual companies —
+        business model, competitive position, unit economics. The book memos
+        are reactions: what stuck, what I'd argue with, how my thinking changed.
       </p>
 
-      <h2>Based in Austin</h2>
+      <h2>Get in touch</h2>
       <p>
-        Reach me at <a href="mailto:hello@example.com">hello@example.com</a>.
-        I'm always interested in talking about companies, books, or anything in
-        the overlap.
+        I'm always interested in talking about companies, investing, or anything
+        in the overlap. Find me on LinkedIn:
+      </p>
+      <p>
+        <a href="https://www.linkedin.com/in/cooper-mendoza" target="_blank" rel="noopener noreferrer" class="linkedin-link">
+          linkedin.com/in/cooper-mendoza →
+        </a>
       </p>
     </div>
   </div>
@@ -56,5 +67,11 @@ import Page from '../layouts/Page.astro';
 
   .about-body {
     padding-bottom: var(--space-16);
+  }
+
+  .linkedin-link {
+    font-family: var(--font-mono);
+    font-size: var(--size-sm);
+    letter-spacing: 0.04em;
   }
 </style>

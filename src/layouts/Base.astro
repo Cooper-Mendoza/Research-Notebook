@@ -6,8 +6,8 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'A public research notebook.' } = Astro.props;
-const siteTitle = title === 'Home' ? 'Research Notebook' : `${title} — Research Notebook`;
+const { title, description = 'Cooper Mendoza — company research, book notes, and equity analysis.' } = Astro.props;
+const siteTitle = title === 'Home' ? 'Cooper Mendoza' : `${title} — Cooper Mendoza`;
 ---
 <!doctype html>
 <html lang="en">
@@ -16,7 +16,9 @@ const siteTitle = title === 'Home' ? 'Research Notebook' : `${title} — Researc
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <title>{siteTitle}</title>
+    <!-- SVG favicon (modern browsers) with PNG fallback -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/png" href="/favicon.png" />
   </head>
   <body>
     <slot />
