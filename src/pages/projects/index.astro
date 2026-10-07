@@ -11,7 +11,7 @@ const description = 'Work product rather than opinion: KPI frameworks, valuation
 
 <Page title="Projects" description={description}>
   <div class="container">
-    <SectionHeader eyebrow="Projects" title="Models & Analysis" description={description} count={countLabel(posts.length, 'project')} />
+    <SectionHeader eyebrow="Projects" title="Models & Analysis" description={description} count={posts.length ? countLabel(posts.length, 'project') : undefined} />
     {posts.length > 0 ? (
       <div class="post-list">
         {posts.map((post) => <PostCard {...post} variant="list" />)}

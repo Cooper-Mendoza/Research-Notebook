@@ -11,7 +11,7 @@ const description = 'Deep dives into how businesses work: how they make money, w
 
 <Page title="Research" description={description}>
   <div class="container">
-    <SectionHeader eyebrow="Research" title="Company & Industry Notes" description={description} count={countLabel(posts.length, 'note')} />
+    <SectionHeader eyebrow="Research" title="Company & Industry Notes" description={description} count={posts.length ? countLabel(posts.length, 'note') : undefined} />
     {posts.length > 0 ? (
       <div class="post-list">
         {posts.map((post) => <PostCard {...post} variant="list" />)}

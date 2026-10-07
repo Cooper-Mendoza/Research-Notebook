@@ -11,7 +11,7 @@ const description = 'Everything on the site — research, book memos, and projec
 
 <Page title="Archive" description={description}>
   <div class="container">
-    <SectionHeader eyebrow="Archive" title="All Writing" description={description} count={countLabel(posts.length, 'entry', 'entries')} />
+    <SectionHeader eyebrow="Archive" title="All Writing" description={description} count={posts.length ? countLabel(posts.length, 'entry', 'entries') : undefined} />
     {posts.length > 0 ? (
       <div class="post-list">
         {posts.map((post) => <PostCard {...post} variant="list" showKind />)}

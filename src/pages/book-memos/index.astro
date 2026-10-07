@@ -11,7 +11,7 @@ const description = 'Not summaries — reactions. What stuck, what I\'d push bac
 
 <Page title="Book Memos" description={description}>
   <div class="container">
-    <SectionHeader eyebrow="Book Memos" title="Reading Notes" description={description} count={countLabel(posts.length, 'memo')} />
+    <SectionHeader eyebrow="Book Memos" title="Reading Notes" description={description} count={posts.length ? countLabel(posts.length, 'memo') : undefined} />
     {posts.length > 0 ? (
       <div class="post-list">
         {posts.map((post) => <PostCard {...post} variant="list" />)}

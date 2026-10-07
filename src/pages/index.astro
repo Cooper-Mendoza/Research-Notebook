@@ -2,7 +2,7 @@
 import Page from '../layouts/Page.astro';
 import PostCard from '../components/PostCard.astro';
 import EmptyState from '../components/EmptyState.astro';
-import { getAllPosts, countLabel } from '../lib/posts';
+import { getAllPosts } from '../lib/posts';
 
 const posts = await getAllPosts();
 const recent = posts.slice(0, 5);
@@ -65,7 +65,7 @@ const description =
           <a class="topic-cell" href={href}>
             <div class="topic-cell__head">
               <span class="topic-cell__title">{title}</span>
-              <span class="mono-meta">{count}</span>
+              {count > 0 && <span class="mono-meta">{count}</span>}
             </div>
             <p class="topic-cell__desc">{desc}</p>
             <span class="eyebrow">{tags}</span>

@@ -107,4 +107,6 @@ export function collectTags(posts: PostSummary[]): { tag: string; count: number 
 }
 
 export const tagLabel = (tag: string): string => tag.replace(/-/g, ' ');
+/** "equity-analysis" → "Equity Analysis" for page titles. */
+export const tagTitle = (tag: string): string => tagLabel(tag).replace(/\b\w/g, (c) => c.toUpperCase());
 export const tagHref = (tag: string): string => `/tags/${tag}/`;

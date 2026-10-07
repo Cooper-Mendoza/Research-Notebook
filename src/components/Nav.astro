@@ -97,6 +97,7 @@ const monogram = monogramSvg.replace(
     letter-spacing: 0.2em;
     color: var(--ink);
     text-decoration: none;
+    white-space: nowrap;
     transition: color 0.15s;
   }
   .wordmark:hover { color: var(--ink-muted); }
@@ -115,6 +116,7 @@ const monogram = monogramSvg.replace(
     font-size: 0.875rem;
     color: var(--ink-muted);
     text-decoration: none;
+    white-space: nowrap;
     transition: color 0.15s;
   }
   .nav__link:hover, .nav__link--active { color: var(--ink); }
@@ -165,7 +167,11 @@ const monogram = monogramSvg.replace(
   .menu__panel li:last-child a { border-bottom: 0; }
   .menu__panel a:hover, .menu__panel a[aria-current] { color: var(--ink); }
 
-  @media (max-width: 639px) {
+  @media (max-width: 760px) {
+    .nav__list { gap: var(--space-4); }
+  }
+
+  @media (max-width: 679px) {
     .nav { display: none; }
     .menu { display: block; }
   }

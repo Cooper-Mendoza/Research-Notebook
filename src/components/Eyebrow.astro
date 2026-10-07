@@ -1,9 +1,0 @@
----
-interface Props {
-  subtle?: boolean;
-}
-const { subtle = false } = Astro.props;
----
-<span class:list={['eyebrow', { 'eyebrow--subtle': subtle }]}>
-  <slot />
-</span>

@@ -1,5 +1,5 @@
 ---
-import { formatDate, isoDate, shortReadingTime, KIND_LABEL, type PostType } from '../lib/posts';
+import { formatDate, isoDate, shortReadingTime, tagLabel, KIND_LABEL, type PostType } from '../lib/posts';
 
 interface Props {
   title: string;
@@ -9,6 +9,7 @@ interface Props {
   href: string;
   type: PostType;
   author?: string;
+  tags?: string[];
   draft?: boolean;
   /** 'home': kind + date on top (homepage). 'list': metadata in a right-hand column (section pages, archive). */
   variant?: 'home' | 'list';
@@ -19,7 +20,7 @@ interface Props {
 }
 
 const {
-  title, date, summary, readingTime, href, type, author,
+  title, date, summary, readingTime, href, type, author, tags = [],
   draft = false, variant = 'home', showKind = false, headingLevel = 'h2',
 } = Astro.props;
 
@@ -30,9 +31,9 @@ const kind = KIND_LABEL[type];
 {variant === 'home' ? (
   <a class="post-row" href={href}>
     <div class="post-row__top">
-      <span class="eyebrow">{kind}{draft && <> · <span class="draft-badge">Draft</span></>}</span>
+      <span class="eyebrow">{kind}{draft && <> <span aria-hidden="true">·</span> <span class="draft-badge">Draft</span></>}</span>
       <span class="mono-meta">
-        <time datetime={isoDate(date)}>{formatDate(date)}</time> · {shortReadingTime(readingTime)}
+        <time datetime={isoDate(date)}>{formatDate(date)}</time> <span aria-hidden="true">·</span> {shortReadingTime(readingTime)}
       </span>
     </div>
     <Heading class="post-row__title">{title}</Heading>
@@ -47,7 +48,7 @@ const kind = KIND_LABEL[type];
       <p class="post-row__desc">{summary}</p>
     </div>
     <div class="post-row__side">
-      {showKind && <span class="eyebrow">{kind}</span>}
+      {showKind ? <span class="eyebrow">{kind}</span> : tags[0] && <span class="eyebrow">{tagLabel(tags[0])}</span>}
       {draft && <span class="draft-badge">Draft</span>}
       <time class="mono-meta" datetime={isoDate(date)}>{formatDate(date, 'month')}</time>
       <span class="mono-meta">{shortReadingTime(readingTime)}</span>

@@ -13,7 +13,8 @@ const postFields = {
   summary: z.string(),
   // Optional — when omitted it is estimated from the body at build time (~220 wpm).
   readingTime: z.string().optional(),
-  tags: z.array(z.string()).optional(),
+  // Tags become URL segments (/tags/<tag>/), so they must be lowercase words joined by hyphens.
+  tags: z.array(z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'tags must be lowercase words joined by hyphens, e.g. "equity-analysis"')).optional(),
   // true = keep the file in the repo but leave it out of the public build.
   // Drafts still render in `npm run dev` so they can be previewed locally.
   draft: z.boolean().default(false),
