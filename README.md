@@ -1,5 +1,7 @@
 # Research Notebook
 
+**Live at [coopermendoza.vercel.app](https://coopermendoza.vercel.app)**
+
 Cooper Mendoza's public notebook — company research, book memos, and how the thinking changes over time.
 
 Built with [Astro](https://astro.build) as a fully static site: no client-side JavaScript, self-hosted fonts, ~8 pages under half a megabyte including type.
