@@ -1,0 +1,23 @@
+---
+import Page from '../layouts/Page.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import PostCard from '../components/PostCard.astro';
+import EmptyState from '../components/EmptyState.astro';
+import { getAllPosts, countLabel } from '../lib/posts';
+
+const posts = await getAllPosts();
+const description = 'Everything on the site — research, book memos, and projects — newest first.';
+---
+
+<Page title="Archive" description={description}>
+  <div class="container">
+    <SectionHeader eyebrow="Archive" title="All Writing" description={description} count={countLabel(posts.length, 'entry', 'entries')} />
+    {posts.length > 0 ? (
+      <div class="post-list">
+        {posts.map((post) => <PostCard {...post} variant="list" showKind />)}
+      </div>
+    ) : (
+      <EmptyState message="Nothing published yet — the first pieces are in progress." />
+    )}
+  </div>
+</Page>

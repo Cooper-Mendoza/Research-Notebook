@@ -1,0 +1,23 @@
+---
+import Page from '../../layouts/Page.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import PostCard from '../../components/PostCard.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import { getProjects, toSummary, countLabel } from '../../lib/posts';
+
+const posts = (await getProjects()).map((p) => toSummary(p, 'project'));
+const description = 'Work product rather than opinion: KPI frameworks, valuation models, and analysis built for real problems — including the KPI project I did for Dell.';
+---
+
+<Page title="Projects" description={description}>
+  <div class="container">
+    <SectionHeader eyebrow="Projects" title="Models & Analysis" description={description} count={countLabel(posts.length, 'project')} />
+    {posts.length > 0 ? (
+      <div class="post-list">
+        {posts.map((post) => <PostCard {...post} variant="list" />)}
+      </div>
+    ) : (
+      <EmptyState message="Project write-ups are being prepared for publication." />
+    )}
+  </div>
+</Page>

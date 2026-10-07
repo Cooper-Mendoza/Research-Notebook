@@ -1,31 +1,23 @@
 ---
 import Page from '../../layouts/Page.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
 import PostCard from '../../components/PostCard.astro';
-import { getBookMemos, toSummary } from '../../lib/posts';
+import EmptyState from '../../components/EmptyState.astro';
+import { getBookMemos, toSummary, countLabel } from '../../lib/posts';
 
-const posts = (await getBookMemos()).map((p) => toSummary(p, 'book-memo', `/book-memos/${p.slug}/`));
+const posts = (await getBookMemos()).map((p) => toSummary(p, 'book-memo'));
+const description = 'Not summaries — reactions. What stuck, what I\'d push back on, and how a book changed how I think.';
 ---
 
-<Page
-  title="Book Memos"
-  description="Reading notes — not summaries but reactions: what stuck, what I'd push back on, and how it changed how I think."
->
+<Page title="Book Memos" description={description}>
   <div class="container">
-    <header class="listing-header">
-      <span class="eyebrow">Book Memos</span>
-      <h1 class="listing-title">Reading notes</h1>
-      <p class="listing-desc">
-        Not summaries — reactions. What stuck, what I'd push back on,
-        and how it changed how I think.
-      </p>
-    </header>
-
+    <SectionHeader eyebrow="Book Memos" title="Reading Notes" description={description} count={countLabel(posts.length, 'memo')} />
     {posts.length > 0 ? (
       <div class="post-list">
-        {posts.map((post) => <PostCard {...post} />)}
+        {posts.map((post) => <PostCard {...post} variant="list" />)}
       </div>
     ) : (
-      <p class="empty-state">The first book memos are in progress. Check back soon.</p>
+      <EmptyState message="The first book memos are in progress." />
     )}
   </div>
 </Page>

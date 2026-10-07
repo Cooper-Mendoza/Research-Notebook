@@ -1,82 +1,76 @@
 ---
 import Page from '../layouts/Page.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+
+const interests = [
+  'Equity valuation — what a business is actually worth, and why',
+  'Building and defending a stock pitch',
+  'Business models, unit economics, and where the moat is',
+  'Capital allocation and management incentives',
+  'KPI design and performance measurement',
+];
 ---
 
 <Page title="About" description="Cooper Mendoza — Finance student at UT Austin's McCombs School of Business (Class of 2029) and officer of Texas Equity Management.">
   <div class="container">
-    <header class="about-header">
-      <span class="eyebrow">About</span>
-      <h1 class="about-title">Cooper Mendoza</h1>
-    </header>
+    <SectionHeader eyebrow="About" title="Cooper Mendoza" />
 
     <div class="prose about-body">
       <p>
-        I'm a Finance student at the University of Texas at Austin,
-        McCombs School of Business, Class of 2029. My focus is equity
-        valuation, stock pitching, and investment analysis — the work of
+        This is my public notebook. I'm a Finance student at the University of
+        Texas at Austin, McCombs School of Business, Class of 2029. My focus is
+        equity valuation, stock pitching, and investment analysis — the work of
         understanding what a business is actually worth and why.
       </p>
-
       <p>
         I'm an officer of <strong>Texas Equity Management (TEM)</strong>, a
         student-run investment fund at McCombs. We present stock pitches and
         portfolio updates to give our members real exposure to markets and the
         discipline of making a case in front of people who will push back on it.
       </p>
-
-      <h2>Why this notebook</h2>
       <p>
-        I started writing publicly because it forces a standard. A research note
-        you're going to show someone has to be more honest than one that lives
-        in a folder. The process of cleaning up thinking enough to publish it
-        is most of the value.
-      </p>
-      <p>
-        The research section is where I work through individual companies —
-        business model, competitive position, unit economics. The book memos
-        are reactions: what stuck, what I'd argue with, how my thinking changed.
-      </p>
-
-      <h2>Get in touch</h2>
-      <p>
-        I'm always interested in talking about companies, investing, or anything
-        in the overlap. Find me on LinkedIn:
-      </p>
-      <p>
-        <a href="https://www.linkedin.com/in/cooper-mendoza" target="_blank" rel="noopener noreferrer" class="linkedin-link">
-          linkedin.com/in/cooper-mendoza
-          <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          <span class="sr-only">(opens in a new tab)</span>
-        </a>
+        This site is where I publish company research, valuation notes, book
+        memos, and project work. Everything here reflects my own research and
+        views.
       </p>
     </div>
+
+    <hr class="rule about-rule" />
+
+    <section class="about-section" aria-labelledby="interests-heading">
+      <h2 class="eyebrow" id="interests-heading">Interests</h2>
+      <ul class="dot-list">
+        {interests.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+
+    <hr class="rule about-rule" />
+
+    <section class="about-section" id="contact" aria-labelledby="contact-heading">
+      <h2 class="eyebrow" id="contact-heading">Get in touch</h2>
+      <p class="about-contact">
+        I'm reachable on LinkedIn for research, recruiting, and anything in the overlap.
+      </p>
+      <a class="link-caps" href="https://www.linkedin.com/in/cooper-mendoza" target="_blank" rel="noopener noreferrer">
+        LinkedIn
+        <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        <span class="sr-only">(opens in a new tab)</span>
+      </a>
+    </section>
   </div>
 </Page>
 
 <style>
-  .about-header {
-    padding: var(--space-12) 0 var(--space-8);
-  }
-
-  .about-header .eyebrow { display: block; margin-bottom: var(--space-4); }
-
-  .about-title {
+  .about-body { padding-bottom: var(--space-10); }
+  .about-rule { margin: 0; }
+  .about-section { padding: var(--space-8) 0; }
+  .about-section .eyebrow { display: block; margin-bottom: var(--space-4); }
+  .about-contact {
     font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: var(--size-2xl);
-    letter-spacing: -0.015em;
-  }
-
-  .about-body {
-    padding-bottom: var(--space-16);
-  }
-
-  .linkedin-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    font-family: var(--font-mono);
-    font-size: var(--size-sm);
-    letter-spacing: 0.04em;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    max-width: 30rem;
+    margin-bottom: var(--space-4);
   }
 </style>

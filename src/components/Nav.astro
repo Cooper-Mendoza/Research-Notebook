@@ -3,9 +3,10 @@
 import monogramSvg from '../../public/favicon.svg?raw';
 
 const links = [
-  { href: '/',            label: 'Home' },
   { href: '/research/',   label: 'Research' },
   { href: '/book-memos/', label: 'Book Memos' },
+  { href: '/projects/',   label: 'Projects' },
+  { href: '/archive/',    label: 'Archive' },
   { href: '/about/',      label: 'About' },
 ];
 
@@ -14,13 +15,13 @@ const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astr
 /** 'page' = this exact page, 'section' = an ancestor section (e.g. Research while reading a research post). */
 function state(href: string): 'page' | 'section' | undefined {
   if (pathname === href) return 'page';
-  if (href !== '/' && pathname.startsWith(href)) return 'section';
+  if (pathname.startsWith(href)) return 'section';
   return undefined;
 }
 
 const monogram = monogramSvg.replace(
   '<svg ',
-  '<svg class="monogram" width="28" height="28" aria-hidden="true" focusable="false" ',
+  '<svg class="monogram" width="22" height="22" aria-hidden="true" focusable="false" ',
 );
 ---
 
@@ -30,15 +31,16 @@ const monogram = monogramSvg.replace(
       <Fragment set:html={monogram} />
       <span class="wordmark__text">Cooper Mendoza</span>
     </a>
-    <nav aria-label="Main">
-      <ul class="nav-list">
+
+    <nav aria-label="Main" class="nav">
+      <ul class="nav__list">
         {links.map(({ href, label }) => {
           const s = state(href);
           return (
             <li>
               <a
                 href={href}
-                class:list={['nav-link', { 'nav-link--active': !!s }]}
+                class:list={['nav__link', { 'nav__link--active': !!s }]}
                 aria-current={s === 'page' ? 'page' : s === 'section' ? 'true' : undefined}
               >
                 {label}
@@ -48,13 +50,33 @@ const monogram = monogramSvg.replace(
         })}
       </ul>
     </nav>
+
+    <!-- Phone menu: no JavaScript, just a <details> element -->
+    <details class="menu">
+      <summary class="menu__button" aria-label="Menu">
+        <svg class="menu__icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg>
+      </summary>
+      <nav aria-label="Main" class="menu__panel">
+        <ul>
+          {links.map(({ href, label }) => {
+            const s = state(href);
+            return (
+              <li>
+                <a href={href} aria-current={s === 'page' ? 'page' : s === 'section' ? 'true' : undefined}>{label}</a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </details>
   </div>
 </header>
 
 <style>
   .site-header {
-    padding: var(--space-4) 0;
-    border-bottom: 1px solid var(--color-border);
+    position: relative;
+    background: var(--paper);
+    border-bottom: 1px solid var(--stone);
   }
 
   .header-inner {
@@ -62,60 +84,89 @@ const monogram = monogramSvg.replace(
     align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
+    height: 3.5rem;
   }
 
   .wordmark {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: var(--space-2) 0;
-    text-decoration: none;
-    color: var(--color-text);
-    flex-shrink: 0;
-  }
-
-  .wordmark :global(.monogram) {
-    display: block;
-    flex-shrink: 0;
-  }
-
-  .wordmark__text {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: var(--size-md);
-    line-height: 1;
-    letter-spacing: -0.01em;
-  }
-
-  .nav-list {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 0 var(--space-4);
-  }
-
-  /* Padded so each link is a comfortable ~32px-tall tap target on phones. */
-  .nav-link {
-    display: inline-block;
-    padding: var(--space-2) var(--space-1);
+    gap: 0.6rem;
     font-family: var(--font-mono);
-    font-size: var(--size-xs);
-    line-height: 1.5;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.16em;
-    color: var(--color-subtle);
+    letter-spacing: 0.2em;
+    color: var(--ink);
     text-decoration: none;
     transition: color 0.15s;
   }
+  .wordmark:hover { color: var(--ink-muted); }
+  .wordmark :global(.monogram) { display: block; flex-shrink: 0; }
 
-  .nav-link:hover { color: var(--color-text); }
+  .nav__list {
+    list-style: none;
+    display: flex;
+    gap: var(--space-6);
+  }
 
-  .nav-link--active { color: var(--color-accent-text); }
+  .nav__link {
+    display: inline-block;
+    padding: var(--space-2) 0;
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav__link:hover, .nav__link--active { color: var(--ink); }
 
-  /* Small screens: the tile alone is the logo. */
-  @media (max-width: 480px) {
-    .wordmark__text { display: none; }
-    .nav-list { gap: 0 var(--space-3); }
+  .menu { display: none; }
+
+  .menu__button {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-right: -0.5rem;
+    color: var(--ink);
+  }
+  .menu__button::-webkit-details-marker { display: none; }
+
+  .menu__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+
+  .menu__panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: 20;
+    background: var(--paper);
+    border-bottom: 1px solid var(--stone);
+  }
+  .menu__panel ul { list-style: none; padding: var(--space-2) var(--gutter) var(--space-4); }
+  .menu__panel a {
+    display: block;
+    padding: 0.65rem 0;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--ink-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--stone);
+  }
+  .menu__panel li:last-child a { border-bottom: 0; }
+  .menu__panel a:hover, .menu__panel a[aria-current] { color: var(--ink); }
+
+  @media (max-width: 639px) {
+    .nav { display: none; }
+    .menu { display: block; }
   }
 </style>

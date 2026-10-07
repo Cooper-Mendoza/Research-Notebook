@@ -1,0 +1,27 @@
+---
+import ResearchPost from '../../layouts/ResearchPost.astro';
+import { getProjects, readingTime } from '../../lib/posts';
+
+// Drafts are excluded here too, so a hidden project is not reachable at its direct URL in production.
+export async function getStaticPaths() {
+  const posts = await getProjects();
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<ResearchPost
+  kind="Project"
+  title={post.data.title}
+  date={post.data.date}
+  summary={post.data.summary}
+  readingTime={readingTime(post.body, post.data.readingTime)}
+  client={post.data.client}
+  stats={post.data.stats}
+  tags={post.data.tags}
+  draft={post.data.draft}
+>
+  <Content />
+</ResearchPost>

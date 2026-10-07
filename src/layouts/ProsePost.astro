@@ -18,93 +18,33 @@ const { title, date, summary, readingTime, author, tags = [], draft = false } = 
 <Page title={title} description={summary} type="article" publishedTime={date}>
   <article class="container">
     <header class="post-header">
-      <p class="post-header__meta">
-        <a href="/book-memos/" class="eyebrow back-link">
-          <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4"/></svg>
-          Book Memos
-        </a>
-      </p>
+      <span class="stamp eyebrow">Book Memo</span>
       <h1 class="post-title">{title}</h1>
-      {author && <p class="post-author">{author}</p>}
-      <div class="post-byline meta-row">
-        <time class="eyebrow eyebrow--subtle" datetime={isoDate(date)}>{formatDate(date, 'long')}</time>
-        <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
-        <span class="eyebrow eyebrow--subtle">{readingTime}</span>
+      <p class="post-subtitle">{summary}</p>
+      <div class="post-meta">
+        <time datetime={isoDate(date)}>{formatDate(date)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{readingTime}</span>
+        {author && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span class="post-meta__author">{author}</span>
+          </>
+        )}
         {tags.map((tag) => (
           <>
-            <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
-            <a class="eyebrow eyebrow--subtle tag-link" href={tagHref(tag)}>{tagLabel(tag)}</a>
+            <span aria-hidden="true">·</span>
+            <a class="post-meta__tag" href={tagHref(tag)}>{tagLabel(tag)}</a>
           </>
         ))}
-        {draft && <span class="eyebrow draft-badge">Draft · dev only</span>}
+        {draft && <span class="draft-badge">Draft · dev only</span>}
       </div>
-      <p class="post-summary">{summary}</p>
     </header>
 
-    <div class="post-divider" role="presentation"></div>
+    <hr class="rule post-rule" />
 
     <div class="prose">
       <slot />
     </div>
   </article>
 </Page>
-
-<style>
-  .post-header { padding-bottom: var(--space-8); }
-
-  .post-header__meta { margin-bottom: var(--space-6); }
-
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    padding: var(--space-2) 0;
-    text-decoration: none;
-  }
-  .back-link:hover { text-decoration: underline; }
-
-  .post-title {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: var(--size-headline);
-    line-height: var(--leading-tight);
-    letter-spacing: -0.02em;
-    max-width: 20ch;
-    margin-bottom: var(--space-3);
-  }
-
-  .post-author {
-    font-family: var(--font-mono);
-    font-size: var(--size-sm);
-    color: var(--color-subtle);
-    letter-spacing: 0.08em;
-    margin-bottom: var(--space-3);
-  }
-
-  .post-byline { margin-bottom: var(--space-6); }
-
-  .tag-link { text-decoration: none; }
-  .tag-link:hover { color: var(--color-accent-text); }
-
-  .draft-badge {
-    color: var(--color-bg);
-    background: var(--color-accent);
-    padding: 1px 6px;
-    border-radius: 2px;
-  }
-
-  .post-summary {
-    font-family: var(--font-prose);
-    font-size: var(--size-md);
-    line-height: var(--leading-normal);
-    color: var(--color-subtle);
-    max-width: 58ch;
-    font-style: italic;
-  }
-
-  .post-divider {
-    height: 1px;
-    background: var(--color-border);
-    margin: var(--space-8) 0;
-  }
-</style>

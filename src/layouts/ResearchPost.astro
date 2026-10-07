@@ -1,7 +1,7 @@
 ---
 import Page from './Page.astro';
 import StatRow from '../components/StatRow.astro';
-import { formatDate, isoDate, tagHref, tagLabel } from '../lib/posts';
+import { formatDate, isoDate, shortReadingTime, tagHref, tagLabel } from '../lib/posts';
 
 interface Stat {
   label: string;
@@ -14,96 +14,53 @@ interface Props {
   date: Date;
   summary: string;
   readingTime: string;
+  /** Stamp above the title: "Research" or "Project". */
+  kind?: string;
+  /** Shown in the metadata row for project posts, e.g. "Dell". */
+  client?: string;
   stats?: Stat[];
   tags?: string[];
   draft?: boolean;
 }
 
-const { title, date, summary, readingTime, stats = [], tags = [], draft = false } = Astro.props;
+const {
+  title, date, summary, readingTime, kind = 'Research', client,
+  stats = [], tags = [], draft = false,
+} = Astro.props;
 ---
 
 <Page title={title} description={summary} type="article" publishedTime={date}>
   <article class="container container--wide">
     <header class="post-header">
-      <p class="post-header__meta">
-        <a href="/research/" class="eyebrow back-link">
-          <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4"/></svg>
-          Research
-        </a>
-      </p>
+      <span class="stamp eyebrow">{kind}</span>
       <h1 class="post-title">{title}</h1>
-      <div class="post-byline meta-row">
-        <time class="eyebrow eyebrow--subtle" datetime={isoDate(date)}>{formatDate(date, 'long')}</time>
-        <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
-        <span class="eyebrow eyebrow--subtle">{readingTime}</span>
+      <p class="post-subtitle">{summary}</p>
+      <div class="post-meta">
+        <time datetime={isoDate(date)}>{formatDate(date)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{readingTime}</span>
+        {client && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span class="post-meta__author">for {client}</span>
+          </>
+        )}
         {tags.map((tag) => (
           <>
-            <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
-            <a class="eyebrow eyebrow--subtle tag-link" href={tagHref(tag)}>{tagLabel(tag)}</a>
+            <span aria-hidden="true">·</span>
+            <a class="post-meta__tag" href={tagHref(tag)}>{tagLabel(tag)}</a>
           </>
         ))}
-        {draft && <span class="eyebrow draft-badge">Draft · dev only</span>}
+        {draft && <span class="draft-badge">Draft · dev only</span>}
       </div>
-      <p class="post-summary">{summary}</p>
     </header>
 
-    {stats.length > 0 && <StatRow stats={stats} />}
+    <hr class="rule post-rule" />
 
-    <div class="post-divider" role="presentation"></div>
+    {stats.length > 0 && <StatRow stats={stats} />}
 
     <div class="prose prose--research">
       <slot />
     </div>
   </article>
 </Page>
-
-<style>
-  .post-header { padding-bottom: var(--space-6); }
-
-  .post-header__meta { margin-bottom: var(--space-6); }
-
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    padding: var(--space-2) 0;
-    text-decoration: none;
-  }
-  .back-link:hover { text-decoration: underline; }
-
-  .post-title {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: var(--size-headline);
-    line-height: var(--leading-tight);
-    letter-spacing: -0.02em;
-    max-width: 22ch;
-    margin-bottom: var(--space-3);
-  }
-
-  .post-byline { margin-bottom: var(--space-6); }
-
-  .tag-link { text-decoration: none; }
-  .tag-link:hover { color: var(--color-accent-text); }
-
-  .draft-badge {
-    color: var(--color-bg);
-    background: var(--color-accent);
-    padding: 1px 6px;
-    border-radius: 2px;
-  }
-
-  .post-summary {
-    font-family: var(--font-sans);
-    font-size: var(--size-md);
-    line-height: var(--leading-normal);
-    color: var(--color-subtle);
-    max-width: 62ch;
-  }
-
-  .post-divider {
-    height: 1px;
-    background: var(--color-border);
-    margin: var(--space-8) 0;
-  }
-</style>

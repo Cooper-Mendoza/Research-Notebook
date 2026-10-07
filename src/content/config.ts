@@ -23,7 +23,7 @@ const research = defineCollection({
   type: 'content',
   schema: z.object({
     ...postFields,
-    // Optional 3-up key-stats row rendered above the body.
+    // Optional key-figures row rendered above the body.
     stats: z.array(statSchema).optional(),
   }),
 });
@@ -36,4 +36,15 @@ const bookMemos = defineCollection({
   }),
 });
 
-export const collections = { research, 'book-memos': bookMemos };
+// Work product: KPI frameworks, models, dashboards, case-competition work.
+const projects = defineCollection({
+  type: 'content',
+  schema: z.object({
+    ...postFields,
+    stats: z.array(statSchema).optional(),
+    // Who the work was for, e.g. "Dell" — shown in the post metadata.
+    client: z.string().optional(),
+  }),
+});
+
+export const collections = { research, 'book-memos': bookMemos, projects };

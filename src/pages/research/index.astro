@@ -1,31 +1,23 @@
 ---
 import Page from '../../layouts/Page.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
 import PostCard from '../../components/PostCard.astro';
-import { getResearch, toSummary } from '../../lib/posts';
+import EmptyState from '../../components/EmptyState.astro';
+import { getResearch, toSummary, countLabel } from '../../lib/posts';
 
-const posts = (await getResearch()).map((p) => toSummary(p, 'research', `/research/${p.slug}/`));
+const posts = (await getResearch()).map((p) => toSummary(p, 'research'));
+const description = 'Deep dives into how businesses work: how they make money, where the moat is, what the numbers say, and what the market may be missing.';
 ---
 
-<Page
-  title="Research"
-  description="Deep dives into individual companies: how the business makes money, where the moat is, what the numbers say, and what the market may be missing."
->
+<Page title="Research" description={description}>
   <div class="container">
-    <header class="listing-header">
-      <span class="eyebrow">Research</span>
-      <h1 class="listing-title">Company &amp; industry notes</h1>
-      <p class="listing-desc">
-        Deep dives into individual companies — how the business makes money,
-        where the moat is, what the numbers say, and what the market may be missing.
-      </p>
-    </header>
-
+    <SectionHeader eyebrow="Research" title="Company & Industry Notes" description={description} count={countLabel(posts.length, 'note')} />
     {posts.length > 0 ? (
       <div class="post-list">
-        {posts.map((post) => <PostCard {...post} />)}
+        {posts.map((post) => <PostCard {...post} variant="list" />)}
       </div>
     ) : (
-      <p class="empty-state">The first research notes are in progress. Check back soon.</p>
+      <EmptyState message="Research notes are being prepared for publication." />
     )}
   </div>
 </Page>

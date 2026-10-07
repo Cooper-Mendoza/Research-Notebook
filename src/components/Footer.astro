@@ -1,29 +1,84 @@
 ---
 const year = new Date().getFullYear();
+
+const links = [
+  { href: '/research/',      label: 'Research' },
+  { href: '/book-memos/',    label: 'Book Memos' },
+  { href: '/projects/',      label: 'Projects' },
+  { href: '/archive/',       label: 'Archive' },
+  { href: '/about/',         label: 'About' },
+  { href: '/about/#contact', label: 'Contact' },
+];
 ---
 
 <footer class="site-footer">
-  <div class="container footer-inner">
-    <span class="eyebrow eyebrow--subtle">© {year} Cooper Mendoza — Austin, Texas</span>
-    <span class="eyebrow eyebrow--subtle">Built with Astro</span>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="footer-wordmark">Cooper Mendoza</a>
+        <p class="footer-tagline">Research · Investing · Notes</p>
+      </div>
+      <ul class="footer-links">
+        {links.map(({ href, label }) => <li><a href={href}>{label}</a></li>)}
+      </ul>
+    </div>
+    <div class="footer-bottom">
+      <p class="mono-meta">© {year} Cooper Mendoza. All rights reserved.</p>
+    </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    margin-top: auto;
-    padding: var(--space-8) 0 var(--space-6);
-    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-24);
+    padding: var(--space-10) 0 var(--space-8);
+    background: var(--paper-raised);
+    border-top: 1px solid var(--stone);
   }
 
-  .footer-inner {
+  .footer-top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: var(--space-4);
+    align-items: flex-start;
+    gap: var(--space-8);
+    flex-wrap: wrap;
   }
 
-  @media (max-width: 480px) {
-    .footer-inner { flex-direction: column; align-items: flex-start; }
+  .footer-wordmark {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .footer-wordmark:hover { color: var(--ink-muted); }
+
+  .footer-tagline {
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    margin-top: 0.4rem;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+  }
+  .footer-links a {
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .footer-links a:hover { color: var(--ink); }
+
+  .footer-bottom {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--stone);
   }
 </style>

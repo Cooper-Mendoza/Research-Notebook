@@ -1,7 +1,8 @@
 ---
 import Page from '../../layouts/Page.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
 import PostCard from '../../components/PostCard.astro';
-import { getAllPosts, collectTags, tagLabel, type PostSummary } from '../../lib/posts';
+import { getAllPosts, collectTags, tagLabel, countLabel, type PostSummary } from '../../lib/posts';
 
 // One page per tag that appears on a published post — nothing links to an empty topic.
 export async function getStaticPaths() {
@@ -15,23 +16,17 @@ export async function getStaticPaths() {
 const tag = Astro.params.tag ?? '';
 const { posts } = Astro.props as { posts: PostSummary[] };
 const label = tagLabel(tag);
-const count = `${posts.length} ${posts.length === 1 ? 'note' : 'notes'}`;
 ---
 
-<Page title={`Topic: ${label}`} description={`${count} tagged “${label}” — company research and book memos by Cooper Mendoza.`}>
+<Page title={`Topic: ${label}`} description={`${countLabel(posts.length, 'piece')} tagged “${label}” — research, book memos, and projects by Cooper Mendoza.`}>
   <div class="container">
-    <header class="listing-header">
-      <span class="eyebrow">Topic</span>
-      <h1 class="listing-title listing-title--tag">{label}</h1>
-      <p class="listing-desc">{count} tagged “{label}”.</p>
-    </header>
-
+    <SectionHeader eyebrow="Topic" title={label} count={countLabel(posts.length, 'piece')} />
     <div class="post-list">
-      {posts.map((post) => <PostCard {...post} />)}
+      {posts.map((post) => <PostCard {...post} variant="list" showKind />)}
     </div>
   </div>
 </Page>
 
 <style>
-  .listing-title--tag { text-transform: capitalize; }
+  :global(.listing-head__title) { text-transform: capitalize; }
 </style>

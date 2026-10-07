@@ -1,0 +1,19 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  description?: string;
+  /** e.g. "1 memo" — shown at the right of the title, like a running count. */
+  count?: string;
+}
+const { eyebrow, title, description, count } = Astro.props;
+---
+
+<header class="listing-head">
+  <span class="eyebrow">{eyebrow}</span>
+  <div class="listing-head__row">
+    <h1 class="listing-head__title">{title}</h1>
+    {count && <span class="mono-meta">{count}</span>}
+  </div>
+  {description && <p class="listing-head__desc">{description}</p>}
+</header>

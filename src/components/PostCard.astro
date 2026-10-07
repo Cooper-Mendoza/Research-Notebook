@@ -1,5 +1,5 @@
 ---
-import { formatDate, isoDate, tagHref, tagLabel, type PostType } from '../lib/posts';
+import { formatDate, isoDate, shortReadingTime, KIND_LABEL, type PostType } from '../lib/posts';
 
 interface Props {
   title: string;
@@ -9,116 +9,48 @@ interface Props {
   href: string;
   type: PostType;
   author?: string;
-  tags?: string[];
   draft?: boolean;
-  /** h2 on listing pages (under the page h1); h3 on the homepage (under the "Recent work" h2). */
+  /** 'home': kind + date on top (homepage). 'list': metadata in a right-hand column (section pages, archive). */
+  variant?: 'home' | 'list';
+  /** Show the kind label in the list variant (archive and tag pages, where kinds are mixed). */
+  showKind?: boolean;
+  /** h3 under a section label (homepage), h2 under a page h1 (listings). */
   headingLevel?: 'h2' | 'h3';
 }
 
 const {
-  title, date, summary, readingTime, href, type,
-  author, tags = [], draft = false, headingLevel = 'h2',
+  title, date, summary, readingTime, href, type, author,
+  draft = false, variant = 'home', showKind = false, headingLevel = 'h2',
 } = Astro.props;
 
 const Heading = headingLevel;
-const typeLabel = type === 'research' ? 'Research' : 'Book Memo';
+const kind = KIND_LABEL[type];
 ---
 
-<article class="post-card">
-  <div class="post-card__meta meta-row">
-    <span class="eyebrow">{typeLabel}</span>
-    <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
-    <time class="eyebrow eyebrow--subtle" datetime={isoDate(date)}>{formatDate(date)}</time>
-    <span class="eyebrow eyebrow--subtle separator" aria-hidden="true">·</span>
-    <span class="eyebrow eyebrow--subtle">{readingTime}</span>
-    {draft && <span class="eyebrow draft-badge">Draft · dev only</span>}
-  </div>
-  <Heading class="post-card__title">
-    <a href={href}>{title}</a>
-  </Heading>
-  {author && <p class="post-card__author">{author}</p>}
-  <p class="post-card__summary">{summary}</p>
-  {tags.length > 0 && (
-    <ul class="post-card__tags" aria-label="Topics">
-      {tags.map((tag) => <li><a class="tag" href={tagHref(tag)}>{tagLabel(tag)}</a></li>)}
-    </ul>
-  )}
-</article>
-
-<style>
-  .post-card {
-    padding: var(--space-6) 0;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .post-card:last-child { border-bottom: none; }
-
-  .post-card__meta { margin-bottom: var(--space-3); }
-
-  .draft-badge {
-    color: var(--color-bg);
-    background: var(--color-accent);
-    padding: 1px 6px;
-    border-radius: 2px;
-  }
-
-  .post-card__title {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: var(--size-xl);
-    line-height: var(--leading-tight);
-    margin-bottom: var(--space-2);
-    letter-spacing: -0.01em;
-  }
-
-  .post-card__title a {
-    color: var(--color-text);
-    text-decoration: none;
-  }
-
-  .post-card__title a:hover { color: var(--color-accent-text); }
-
-  .post-card__author {
-    font-family: var(--font-mono);
-    font-size: var(--size-xs);
-    color: var(--color-subtle);
-    letter-spacing: 0.06em;
-    margin-bottom: var(--space-3);
-  }
-
-  .post-card__summary {
-    font-family: var(--font-prose);
-    font-size: var(--size-base);
-    line-height: var(--leading-normal);
-    color: var(--color-subtle);
-    max-width: 62ch;
-    margin-top: var(--space-3);
-  }
-
-  .post-card__tags {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    margin-top: var(--space-4);
-  }
-
-  .tag {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: var(--size-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--color-subtle);
-    background: var(--color-surface);
-    padding: 3px var(--space-2);
-    border-radius: 2px;
-    text-decoration: none;
-    transition: color 0.15s, background-color 0.15s;
-  }
-
-  .tag:hover {
-    color: var(--color-accent-text);
-    background: var(--color-border);
-  }
-</style>
+{variant === 'home' ? (
+  <a class="post-row" href={href}>
+    <div class="post-row__top">
+      <span class="eyebrow">{kind}{draft && <> · <span class="draft-badge">Draft</span></>}</span>
+      <span class="mono-meta">
+        <time datetime={isoDate(date)}>{formatDate(date)}</time> · {shortReadingTime(readingTime)}
+      </span>
+    </div>
+    <Heading class="post-row__title">{title}</Heading>
+    {author && <p class="post-row__sub post-row__sub--author">{author}</p>}
+    <p class="post-row__desc">{summary}</p>
+  </a>
+) : (
+  <a class="post-row post-row--list" href={href}>
+    <div class="post-row__main">
+      <Heading class="post-row__title">{title}</Heading>
+      {author && <p class="post-row__sub post-row__sub--author">{author}</p>}
+      <p class="post-row__desc">{summary}</p>
+    </div>
+    <div class="post-row__side">
+      {showKind && <span class="eyebrow">{kind}</span>}
+      {draft && <span class="draft-badge">Draft</span>}
+      <time class="mono-meta" datetime={isoDate(date)}>{formatDate(date, 'month')}</time>
+      <span class="mono-meta">{shortReadingTime(readingTime)}</span>
+    </div>
+  </a>
+)}

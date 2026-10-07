@@ -1,133 +1,117 @@
 ---
 import Page from '../layouts/Page.astro';
 import PostCard from '../components/PostCard.astro';
-import { getAllPosts, collectTags, tagHref, tagLabel } from '../lib/posts';
+import EmptyState from '../components/EmptyState.astro';
+import { getAllPosts, countLabel } from '../lib/posts';
 
 const posts = await getAllPosts();
 const recent = posts.slice(0, 5);
-const topics = collectTags(posts).slice(0, 8);
+const n = (type: string) => posts.filter((p) => p.type === type).length;
+
+const topics = [
+  { href: '/research/',   title: 'Research',   count: n('research'),  desc: 'Company breakdowns, valuation work, and industry notes', tags: 'Companies · Valuation' },
+  { href: '/book-memos/', title: 'Book Memos', count: n('book-memo'), desc: 'Notes and reactions from books worth reading deeply',     tags: 'Reading notes' },
+  { href: '/projects/',   title: 'Projects',   count: n('project'),   desc: 'KPI frameworks, models, and analysis built for real problems', tags: 'Models · Dashboards' },
+  { href: '/archive/',    title: 'Archive',    count: posts.length,   desc: 'Everything, in reverse chronological order',               tags: 'All writing' },
+];
 
 const description =
-  'Finance student at UT Austin McCombs (Class of 2029) and officer of Texas Equity Management. Company research, equity analysis, and book memos.';
+  'Finance student at UT Austin McCombs (Class of 2029) and officer of Texas Equity Management. Company research, equity analysis, book memos, and project work.';
 ---
 
 <Page title="Home" description={description}>
   <div class="container">
 
-    <!-- Intro -->
-    <section class="intro">
-      <span class="eyebrow">Cooper Mendoza</span>
-      <h1 class="intro__headline">
-        Thinking in public,<br />slowly.
-      </h1>
-      <p class="intro__body">
-        A public notebook — company research, book notes, and how my
-        thinking changes over time. I'm a business student at UT Austin's
-        McCombs School of Business, focused on equity valuation and investing.
-        Based in Austin, Texas.
+    <section class="hero">
+      <span class="eyebrow">Research &amp; Investing</span>
+      <h1 class="hero__title">Cooper Mendoza</h1>
+      <p class="hero__lede">
+        This is my public notebook. I'm a finance student at UT Austin's
+        McCombs School of Business and an officer of Texas Equity Management,
+        our student-run investment fund, where I pitch stocks and present
+        portfolio updates. I use this site to publish company research,
+        valuation notes, book memos, and project work — including the KPI
+        project I did for Dell.
       </p>
+      <p class="hero__based">Based in Austin, Texas.</p>
+      <div class="hero__actions">
+        <a class="btn-solid" href="/about/">About me</a>
+        <a class="link-muted" href="/archive/">
+          All writing
+          <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+      </div>
     </section>
 
-    <!-- Recent work -->
+    <hr class="rule" />
+
     <section class="section" aria-labelledby="recent-heading">
-      <h2 class="section__heading" id="recent-heading">
-        <span class="eyebrow">Recent work</span>
-      </h2>
+      <h2 class="eyebrow" id="recent-heading">Recent work</h2>
       {recent.length > 0 ? (
         <div class="post-list">
           {recent.map((post) => <PostCard {...post} headingLevel="h3" />)}
         </div>
       ) : (
-        <p class="empty-state">
-          First notes are in progress. Company research and book memos will
-          appear here as they're published.
-        </p>
+        <EmptyState message="First notes are in progress. Company research, book memos, and project work will appear here as they're published." />
       )}
     </section>
 
-    <!-- Explore by topic — built from the tags on published posts, so it only shows real destinations -->
-    {topics.length > 0 && (
-      <section class="section" aria-labelledby="topics-heading">
-        <h2 class="section__heading" id="topics-heading">
-          <span class="eyebrow">Explore by topic</span>
-        </h2>
-        <ul class="topic-grid">
-          {topics.map(({ tag, count }) => (
-            <li>
-              <a href={tagHref(tag)} class="topic-chip">
-                {tagLabel(tag)} <span class="topic-chip__count">{count}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )}
+    <hr class="rule" />
+
+    <section class="section" aria-labelledby="topics-heading">
+      <h2 class="eyebrow" id="topics-heading">Explore by topic</h2>
+      <div class="topic-grid">
+        {topics.map(({ href, title, count, desc, tags }) => (
+          <a class="topic-cell" href={href}>
+            <div class="topic-cell__head">
+              <span class="topic-cell__title">{title}</span>
+              <span class="mono-meta">{count}</span>
+            </div>
+            <p class="topic-cell__desc">{desc}</p>
+            <span class="eyebrow">{tags}</span>
+          </a>
+        ))}
+      </div>
+    </section>
 
   </div>
 </Page>
 
 <style>
-  .intro {
-    padding: var(--space-16) 0 var(--space-12);
-    max-width: 560px;
+  .hero { padding: var(--space-16) 0 var(--space-12); }
+  .hero .eyebrow { display: block; margin-bottom: 1.25rem; }
+
+  .hero__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.75rem, 5vw + 1rem, 3.75rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    margin-bottom: var(--space-6);
   }
 
-  .intro .eyebrow {
-    display: block;
-    margin-bottom: var(--space-4);
-  }
-
-  .intro__headline {
+  .hero__lede {
     font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: var(--size-headline);
-    line-height: var(--leading-tight);
-    letter-spacing: -0.02em;
-    margin-bottom: var(--space-6);
+    font-size: 1.125rem;
+    line-height: 1.625;
+    color: var(--ink-muted);
+    max-width: 32rem;
+    margin-bottom: var(--space-3);
   }
 
-  .intro__body {
-    font-family: var(--font-prose);
-    font-size: var(--size-md);
-    line-height: var(--leading-loose);
-    color: var(--color-subtle);
-    max-width: 48ch;
+  .hero__based {
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    margin-bottom: var(--space-8);
   }
 
-  .section { margin-top: var(--space-16); }
-
-  .section__heading {
-    margin-bottom: var(--space-6);
-    padding-bottom: var(--space-3);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .topic-grid {
-    list-style: none;
+  .hero__actions {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
+    align-items: center;
+    gap: var(--space-6);
   }
 
-  .topic-chip {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: var(--size-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--color-text);
-    text-decoration: none;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    padding: var(--space-2) var(--space-4);
-    border-radius: 2px;
-    transition: border-color 0.15s, color 0.15s;
-  }
-
-  .topic-chip__count { color: var(--color-subtle); margin-left: var(--space-1); }
-
-  .topic-chip:hover {
-    border-color: var(--color-accent);
-    color: var(--color-accent-text);
-  }
+  .section + .rule, .hero + .rule { margin: 0; }
 </style>
